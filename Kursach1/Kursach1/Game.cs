@@ -11,30 +11,18 @@ namespace Kursach1
         public int arrayLength = 15;
         public int player_y = 14;
         public int enemy_y = 0;
-        public int bullet_x;
-        public int bullet_y;
-        public int hp_player = 100;
-        public int hp_enemy = 99;
-        public bool bullet;
         Random rnd1 = new Random();
         Random rnd2 = new Random();
         List<Bullet> BulletList;
-        public enum GameObject { EMPTY = 0, PLAYER = 1, ENEMY = 2, BULLET = 3 };
+        public enum GameObject { EMPTY, PLAYER, ENEMY, BULLET_P, BULLET_E, EXPLOSION };
 
         Player _player;
         Enemy _enemy;
-        int choose_direction;
 
         public Game()
         {
             map = new int[arrayLength, arrayLength];
             BulletList = new List<Bullet>();
-            Init();
-            ShowMap();
-            ProcessInput();
-        }
-        public override void Init()
-        {
             for (int i = 0; i < arrayLength; i++)
             {
                 for (int j = 0; j < arrayLength; j++)
@@ -46,10 +34,9 @@ namespace Kursach1
             _player = new Player(6);
             _enemy = new Enemy(rnd1.Next(0, arrayLength), arrayLength);
             map[player_y, _player.player_x] = (int)GameObject.PLAYER;
-            map[enemy_y, _enemy.enemy_x] = (int)GameObject.ENEMY;
-
+            map[enemy_y, _enemy._x] = (int)GameObject.ENEMY;
         }
-        public override void ShowMap()
+        public override void Show()
         {
             Console.Clear();
 
@@ -65,8 +52,14 @@ namespace Kursach1
                         case (int)GameObject.ENEMY:
                             Console.Write("M");
                             break;
-                        case (int)GameObject.BULLET:
-                            Console.Write("`");
+                        case (int)GameObject.BULLET_P:
+                            Console.Write("^");
+                            break;
+                        case (int)GameObject.BULLET_E:
+                            Console.Write("|");
+                            break;
+                        case (int)GameObject.EXPLOSION:
+                            Console.Write('@');
                             break;
                         default:
                             Console.Write("-");
@@ -77,7 +70,7 @@ namespace Kursach1
                 Console.Write("\n");
             }
 
-            Console.WriteLine("\nYour HP: {0}\t Enemy's HP:{1}", hp_player, hp_enemy);
+            Console.WriteLine("\nYour HP: {0}\t Enemy's HP:{1}", _player._hp, _enemy._hp);
             Console.WriteLine("\nPress \"q\" to exit.");
 
 
@@ -85,28 +78,21 @@ namespace Kursach1
 
         public override void ProcessInput()
         {
-            ShowMap();
-            ConsoleKeyInfo keyInfo = new ConsoleKeyInfo();
+            Show();
+            ConsoleKeyInfo keyInfo = UserInput();
 
-            while (true)
-            {
-                if (Console.KeyAvailable == true)
-                {
-                    keyInfo = Console.ReadKey(true);
-                    break;
-                }
-            }
+            
             switch (keyInfo.Key)
             {
                 case ConsoleKey.Q:
                     return;
                 case ConsoleKey.LeftArrow:
-                    if (_player.player_x>0)
-                    _player.MovePlayerLeft();
+                    if (_player.player_x > 0)
+                        _player.MovePlayerLeft();
                     break;
                 case ConsoleKey.RightArrow:
-                    if (_player.player_x < arrayLength -1)
-                    _player.MovePlayerRight();
+                    if (_player.player_x < arrayLength - 1)
+                        _player.MovePlayerRight();
                     break;
                 case ConsoleKey.Spacebar:
                     Bullet bullet = new Bullet(_player.player_x, player_y, -1, arrayLength);
@@ -117,24 +103,65 @@ namespace Kursach1
 
             _enemy.MoveEnemy();
 
+            if (_enemy._moves % 3 == 0)
+            {
+                Bullet bullet = new Bullet(_enemy._x, enemy_y, 1, arrayLength);
+                BulletList.Add(bullet);
+            }
+
             map[player_y, _player.player_x] = (int)GameObject.PLAYER;
-            map[enemy_y, _enemy.enemy_x] = (int)GameObject.ENEMY;
+            map[enemy_y, _enemy._x] = (int)GameObject.ENEMY;
+
+            List<Bullet> tmpBullet = new List<Bullet>();
 
             foreach (Bullet bullet in BulletList)
             {
                 bullet.MoveBullet();
+
                 if (bullet._exists)
                 {
-                    map[bullet._y, bullet._x] = (int)GameObject.BULLET;
+                    if (bullet.Collision(enemy_y, _enemy._x))
+                    {
+                        _enemy._hp -= 10;
+                        map[bullet._y, bullet._x] = (int)GameObject.EXPLOSION;
+                    }
+                    else if (bullet.Collision(player_y, _player.player_x))
+                    {
+                        _player._hp -= 10;
+                        map[bullet._y, bullet._x] = (int)GameObject.EXPLOSION;
+                    }
+                    else
+                    {
+                        if(bullet._direction > 0)
+                            map[bullet._y, bullet._x] = (int)GameObject.BULLET_E;
+                        else
+                            map[bullet._y, bullet._x] = (int)GameObject.BULLET_P;
+
+                    }
                 }
                 else
                 {
-                    BulletList.Remove(bullet);
+                    tmpBullet.Add(bullet);
                 }
-                
             }
 
-            ProcessInput();
+            foreach (Bullet bullet in tmpBullet)
+            {
+                BulletList.Remove(bullet);
+            }
+            if (_player._hp <= 0)
+            {
+                EndGame end = new EndGame(false);
+                end.Init();
+                
+            }
+            else if (_enemy._hp <= 0)
+            {
+                EndGame end = new EndGame(true);
+                end.Init();
+            }
+            else
+                ProcessInput();
         }
 
         public void ClearMap()
@@ -153,9 +180,28 @@ namespace Kursach1
     //template method
     public abstract class Screen
     {
-        public abstract void Init();
+        public void Init()
+        {
+            Show();
+            ProcessInput();
+        }
         public abstract void ProcessInput();
-        public abstract void ShowMap();
+        public abstract void Show();
+
+        public ConsoleKeyInfo UserInput() 
+        {
+            ConsoleKeyInfo keyInfo = new ConsoleKeyInfo();
+
+            while (true)
+            {
+                if (Console.KeyAvailable == true)
+                {
+                    keyInfo = Console.ReadKey(true);
+                    break;
+                }
+            }
+            return keyInfo;
+        }
     }
 
 

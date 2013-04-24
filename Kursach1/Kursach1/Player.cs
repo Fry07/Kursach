@@ -8,12 +8,11 @@ namespace Kursach1
     public class Player
     {
         public int player_x;
-        public int hp_player = 100;
+        public int _hp = 100;
 
         public void MovePlayerLeft()
         {                           
                 player_x --;
-                hp_player = 100;
         }
 
         public void MovePlayerRight()

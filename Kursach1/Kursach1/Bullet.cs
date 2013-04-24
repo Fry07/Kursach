@@ -25,7 +25,7 @@ namespace Kursach1
         {
             if (_direction > 0)
             {
-                if (_y + _direction > _border)
+                if (_y + _direction > _border - 1)
                     _exists = false;
             }
             else

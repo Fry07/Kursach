@@ -65,10 +65,10 @@ namespace Kursach1
     {
         GameAbstraction game;
 
-        public Menu()
+        public Menu(InfoImplementor imp)
         {
             game = new GameRef();
-            game.Implementor = new RussianImplementor();
+            game.Implementor = imp;
 
             GetInput();
         }
@@ -91,6 +91,7 @@ namespace Kursach1
             {
                 case ConsoleKey.D1:
                     Game game = new Game();
+                    game.Init();
                     break;
                 case ConsoleKey.D2:
                     ChooseLanguage();

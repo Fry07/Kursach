@@ -7,15 +7,19 @@ namespace Kursach1
 {
     public class Enemy
     {
-        public int enemy_x;
-        int array_length;
+        public int _x;
+        public int _hp;
+        public int _moves;
+        int _size;
         Random rnd2 = new Random();
         int choose_direction;
 
         public Enemy(int x, int length)
         {
-            enemy_x = x;
-            array_length = length;
+            _x = x;
+            _size = length;
+            _hp = 100;
+            _moves = 0;
         }
 
         public void MoveEnemy()
@@ -23,18 +27,20 @@ namespace Kursach1
             choose_direction = rnd2.Next(0, 2);
             if (choose_direction == 0)
             {
-                if (enemy_x > 0)
-                    enemy_x--;
+                if (_x > 0)
+                    _x--;
                 else
-                    enemy_x++;
+                    _x++;
             }
             else if (choose_direction == 1)
             {
-                if (enemy_x < array_length - 1)
-                    enemy_x++;
+                if (_x < _size - 1)
+                    _x++;
                 else
-                    enemy_x--;
+                    _x--;
             }
+
+            _moves++;
         }
     }
 }
