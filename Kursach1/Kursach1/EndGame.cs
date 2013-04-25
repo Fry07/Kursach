@@ -20,7 +20,7 @@ namespace Kursach1
                 Console.WriteLine("SUCKER");
             }
 
-            Console.WriteLine("1 - new \n 2 - main");
+            Console.WriteLine("1 - new game;\n2 - main menu.");
         }
         public override void ProcessInput()
         {

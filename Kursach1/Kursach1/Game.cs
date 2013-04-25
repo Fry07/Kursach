@@ -87,12 +87,12 @@ namespace Kursach1
                 case ConsoleKey.Q:
                     return;
                 case ConsoleKey.LeftArrow:
-                    if (_player.player_x > 0)
-                        _player.MovePlayerLeft();
+                    Proxy proxy1 = new Proxy(_player, arrayLength);
+                    proxy1.MovePlayerLeft();
                     break;
                 case ConsoleKey.RightArrow:
-                    if (_player.player_x < arrayLength - 1)
-                        _player.MovePlayerRight();
+                    Proxy proxy2 = new Proxy(_player, arrayLength);
+                    proxy2.MovePlayerRight();
                     break;
                 case ConsoleKey.Spacebar:
                     Bullet bullet = new Bullet(_player.player_x, player_y, -1, arrayLength);

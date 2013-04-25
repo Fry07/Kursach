@@ -5,17 +5,26 @@ using System.Text;
 
 namespace Kursach1
 {
-    public class Player
+    public abstract class Abst_Player
     {
         public int player_x;
         public int _hp = 100;
 
-        public void MovePlayerLeft()
+        public abstract void MovePlayerLeft();
+
+        public abstract void MovePlayerRight();
+    }
+
+    public class Player : Abst_Player
+    {
+        
+
+        public override void MovePlayerLeft()
         {                           
                 player_x --;
         }
 
-        public void MovePlayerRight()
+        public override void MovePlayerRight()
         {
                 player_x ++;
         }
