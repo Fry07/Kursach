@@ -8,6 +8,7 @@ namespace Kursach1
     public class EndGame : Screen
     {
         bool _player_wins;
+        int _score;
         public override void Show()
         {
             Console.Clear();
@@ -29,7 +30,8 @@ namespace Kursach1
             switch (key.Key)
             {
                 case ConsoleKey.D1:
-                    Game game2 = new Game();
+                    
+                    Game game2 = new Game(_score);
                     game2.Init();
                     break;
                 case ConsoleKey.D2:
@@ -40,9 +42,10 @@ namespace Kursach1
             }
         }
 
-        public EndGame(bool win)
+        public EndGame(bool win, int score)
         {
             _player_wins = win;
+            _score = score;
         }
 
     }

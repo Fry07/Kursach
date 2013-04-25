@@ -90,7 +90,7 @@ namespace Kursach1
             switch (keyInfo.Key)
             {
                 case ConsoleKey.D1:
-                    Game game = new Game();
+                    Game game = new Game(0);
                     game.Init();
                     break;
                 case ConsoleKey.D2:

@@ -11,6 +11,7 @@ namespace Kursach1
         public int arrayLength = 15;
         public int player_y = 14;
         public int enemy_y = 0;
+        public int _score;
         Random rnd1 = new Random();
         Random rnd2 = new Random();
         List<Bullet> BulletList;
@@ -19,8 +20,9 @@ namespace Kursach1
         Player _player;
         Enemy _enemy;
 
-        public Game()
+        public Game(int score)
         {
+            _score = score;
             map = new int[arrayLength, arrayLength];
             BulletList = new List<Bullet>();
             for (int i = 0; i < arrayLength; i++)
@@ -71,6 +73,7 @@ namespace Kursach1
             }
 
             Console.WriteLine("\nYour HP: {0}\t Enemy's HP:{1}", _player._hp, _enemy._hp);
+            Console.WriteLine("Score: {0}", _score);
             Console.WriteLine("\nPress \"q\" to exit.");
 
 
@@ -103,7 +106,7 @@ namespace Kursach1
 
             _enemy.MoveEnemy();
 
-            if (_enemy._moves % 3 == 0)
+            if (_enemy._moves % 2 == 0)
             {
                 Bullet bullet = new Bullet(_enemy._x, enemy_y, 1, arrayLength);
                 BulletList.Add(bullet);
@@ -151,13 +154,14 @@ namespace Kursach1
             }
             if (_player._hp <= 0)
             {
-                EndGame end = new EndGame(false);
+                EndGame end = new EndGame(false, _score);
                 end.Init();
                 
             }
             else if (_enemy._hp <= 0)
             {
-                EndGame end = new EndGame(true);
+                _score += 10;
+                EndGame end = new EndGame(true, _score);
                 end.Init();
             }
             else
