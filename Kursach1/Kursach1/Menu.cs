@@ -64,11 +64,13 @@ namespace Kursach1
     class Menu
     {
         GameAbstraction game;
+        public List<int> ScoreList;
 
-        public Menu(InfoImplementor imp)
+        public Menu(InfoImplementor imp, List<int> scores)
         {
             game = new GameRef();
             game.Implementor = imp;
+            ScoreList = scores;
 
             GetInput();
         }
@@ -97,7 +99,7 @@ namespace Kursach1
                     ChooseLanguage();
                     break;
                 case ConsoleKey.D3:
-                    // Records();
+                    Records();
                     break;
                 case ConsoleKey.D4:
                     Client cl = new Client();
@@ -147,6 +149,19 @@ namespace Kursach1
         {
             game.ShowInfo();
 
+        }
+
+        public void Records()
+        {
+            Console.Clear();
+            Console.WriteLine("High scores:");
+            HighScore hs = HighScore.Instance;
+            ScoreList = hs.GetScores();
+            for (int i = 0; i < ScoreList.Count; i++)
+            {
+                Console.WriteLine("\n{0}: {1}", i + 1, ScoreList[i]);
+            }
+            Console.ReadKey();
         }
 
     }

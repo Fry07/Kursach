@@ -9,6 +9,7 @@ namespace Kursach1
     {
         bool _player_wins;
         int _score;
+        public List<int> ScoreList = new List<int>();
         public override void Show()
         {
             Console.Clear();
@@ -18,6 +19,10 @@ namespace Kursach1
             }
             else
             {
+                HighScore s1 = HighScore.Instance;
+
+                s1.AddScore(_score);
+               
                 Console.WriteLine("SUCKER");
             }
 
@@ -35,6 +40,10 @@ namespace Kursach1
                     game2.Init();
                     break;
                 case ConsoleKey.D2:
+                    HighScore hs = HighScore.Instance;
+                    hs.AddScore(_score);
+                    Menu menu2 = new Menu(new RussianImplementor(), ScoreList);
+
                     break;
                 default:
                     ProcessInput();

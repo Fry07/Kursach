@@ -10,7 +10,7 @@ namespace Kursach1
         static void Main(string[] args)
         {
             //github
-            Menu menu = new Menu(new RussianImplementor());
+            Menu menu = new Menu(new RussianImplementor(), new List<int>());
             Console.ReadKey();
         }
     }

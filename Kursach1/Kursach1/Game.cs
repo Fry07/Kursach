@@ -25,6 +25,7 @@ namespace Kursach1
             _score = score;
             map = new int[arrayLength, arrayLength];
             BulletList = new List<Bullet>();
+            
             for (int i = 0; i < arrayLength; i++)
             {
                 for (int j = 0; j < arrayLength; j++)
