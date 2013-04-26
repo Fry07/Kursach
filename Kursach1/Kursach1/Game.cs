@@ -12,6 +12,7 @@ namespace Kursach1
         public int player_y = 14;
         public int enemy_y = 0;
         public int _score;
+        public string _enemy_type;
         Random rnd1 = new Random();
         Random rnd2 = new Random();
         List<Bullet> BulletList;
@@ -20,8 +21,9 @@ namespace Kursach1
         Player _player;
         Enemy _enemy;
 
-        public Game(int score)
+        public Game(int score, string enemy_type)
         {
+            _enemy_type = enemy_type;
             _score = score;
             map = new int[arrayLength, arrayLength];
             BulletList = new List<Bullet>();
@@ -35,7 +37,24 @@ namespace Kursach1
             }
 
             _player = new Player(6);
-            _enemy = new Enemy(rnd1.Next(0, arrayLength), arrayLength);
+
+            Create create = new Create();
+            create.x = rnd1.Next(0, arrayLength);
+            create.length = arrayLength;
+            EnemyProcessor createProcessor = null;
+            AbstractEnemy factory = null;
+
+            if (enemy_type == "hard")
+            {
+                factory = new HardEnemyFactory();
+            }
+            else if (enemy_type == "easy")
+            {
+                factory = new EasyEnemyFactory();
+            }
+            createProcessor = new EnemyProcessor(factory);
+            _enemy = createProcessor.processOrder(create);
+
             map[player_y, _player.player_x] = (int)GameObject.PLAYER;
             map[enemy_y, _enemy._x] = (int)GameObject.ENEMY;
         }
@@ -107,7 +126,7 @@ namespace Kursach1
 
             _enemy.MoveEnemy();
 
-            if (_enemy._moves % 2 == 0)
+            if (_enemy._moves % 3 == 0)
             {
                 Bullet bullet = new Bullet(_enemy._x, enemy_y, 1, arrayLength);
                 BulletList.Add(bullet);
@@ -161,8 +180,15 @@ namespace Kursach1
             }
             else if (_enemy._hp <= 0)
             {
-                _score += 10;
-                EndGame end = new EndGame(true, _score);
+                if (_enemy_type == "easy")
+                {
+                    _score += 10;
+                }
+                else if (_enemy_type == "hard")
+                {
+                    _score += 20;
+                }
+                    EndGame end = new EndGame(true, _score);
                 end.Init();
             }
             else

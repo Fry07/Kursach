@@ -9,13 +9,14 @@ namespace Kursach1
     {
         bool _player_wins;
         int _score;
-        public List<int> ScoreList = new List<int>();
+        HighScore _hs;
+
         public override void Show()
         {
             Console.Clear();
             if (_player_wins)
             {
-                Console.WriteLine("GRATZ BRO");
+                Console.WriteLine("Congratulations!");
             }
             else
             {
@@ -23,31 +24,57 @@ namespace Kursach1
 
                 s1.AddScore(_score);
                
-                Console.WriteLine("SUCKER");
+                Console.WriteLine("You lost. =(");
             }
-
-            Console.WriteLine("1 - new game;\n2 - main menu.");
+            if (!_player_wins)
+                Console.WriteLine("1 - try again;\n2 - main menu.");
+            else if (_player_wins)
+                Console.WriteLine("1-easy enemy;\n2-hard enemy;\n3-to the main menu;");
         }
         public override void ProcessInput()
         {
             ConsoleKeyInfo key = UserInput();
-
-            switch (key.Key)
+            if (!_player_wins)
             {
-                case ConsoleKey.D1:
-                    
-                    Game game2 = new Game(_score);
-                    game2.Init();
-                    break;
-                case ConsoleKey.D2:
-                    HighScore hs = HighScore.Instance;
-                    hs.AddScore(_score);
-                    Menu menu2 = new Menu(new RussianImplementor(), ScoreList);
+                switch (key.Key)
+                {
+                    case ConsoleKey.D1:
 
-                    break;
-                default:
-                    ProcessInput();
-                    break;
+                        _score = 0;
+                        Game game2 = new Game(_score, "easy");
+                        game2.Init();
+                        break;
+                    case ConsoleKey.D2:
+                        _hs.AddScore(_score);
+                        return;
+                    default:
+                        ProcessInput();
+                        break;
+                }
+            }
+            else if (_player_wins)
+            {
+                
+                AbstractEnemy factory = null;
+                switch (key.Key)
+                {
+                    case ConsoleKey.D1:                         
+                        factory = new EasyEnemyFactory();
+                        Game game3 = new Game(_score, "easy");
+                        game3.Init();
+                        break;
+                    case ConsoleKey.D2:
+                        factory = new HardEnemyFactory();
+                        Game game4 = new Game(_score, "hard");
+                        game4.Init();
+                        break;
+                    case ConsoleKey.D3:
+                        _hs.AddScore(_score);
+                        return;
+                    default:
+                        ProcessInput();
+                        break;
+                }
             }
         }
 
@@ -55,6 +82,7 @@ namespace Kursach1
         {
             _player_wins = win;
             _score = score;
+            _hs = HighScore.Instance;
         }
 
     }

@@ -66,12 +66,10 @@ namespace Kursach1
         GameAbstraction game;
         public List<int> ScoreList;
 
-        public Menu(InfoImplementor imp, List<int> scores)
+        public Menu(InfoImplementor imp)
         {
             game = new GameRef();
             game.Implementor = imp;
-            ScoreList = scores;
-
             GetInput();
         }
 
@@ -92,7 +90,7 @@ namespace Kursach1
             switch (keyInfo.Key)
             {
                 case ConsoleKey.D1:
-                    Game game = new Game(0);
+                    Game game = new Game(0, "easy");
                     game.Init();
                     break;
                 case ConsoleKey.D2:

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Kursach1
 {
-    public class Enemy
+    public class Enemy_my
     {
         public int _x;
         public int _hp;
@@ -14,7 +14,7 @@ namespace Kursach1
         Random rnd2 = new Random();
         int choose_direction;
 
-        public Enemy(int x, int length)
+        public Enemy_my(int x, int length)
         {
             _x = x;
             _size = length;
