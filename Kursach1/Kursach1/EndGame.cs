@@ -10,6 +10,7 @@ namespace Kursach1
         bool _player_wins;
         int _score;
         HighScore _hs;
+        string _enemy_type;
 
         public override void Show()
         {
@@ -23,11 +24,11 @@ namespace Kursach1
                 HighScore s1 = HighScore.Instance;
 
                 s1.AddScore(_score);
-               
+
                 Console.WriteLine("You lost. =(");
             }
             if (!_player_wins)
-                Console.WriteLine("1 - try again;\n2 - main menu.");
+                Console.WriteLine("1 - try again (you have a chance to save your score and continue);\n2 - main menu.");
             else if (_player_wins)
                 Console.WriteLine("1-easy enemy;\n2-hard enemy;\n3-to the main menu;");
         }
@@ -39,8 +40,12 @@ namespace Kursach1
                 switch (key.Key)
                 {
                     case ConsoleKey.D1:
-
-                        _score = 0;
+                        bool a = false;
+                        if (_enemy_type == "easy") { a = true; }
+                        Save easyFightFlee = new EasySave();
+                        Save hardFightFlee = new HardSave();
+                        easyFightFlee.SetSuccessor(hardFightFlee);
+                        _score = easyFightFlee.SaveScore(_score, a);
                         Game game2 = new Game(_score, "easy");
                         game2.Init();
                         break;
@@ -54,11 +59,11 @@ namespace Kursach1
             }
             else if (_player_wins)
             {
-                
+
                 AbstractEnemy factory = null;
                 switch (key.Key)
                 {
-                    case ConsoleKey.D1:                         
+                    case ConsoleKey.D1:
                         factory = new EasyEnemyFactory();
                         Game game3 = new Game(_score, "easy");
                         game3.Init();
@@ -78,10 +83,11 @@ namespace Kursach1
             }
         }
 
-        public EndGame(bool win, int score)
+        public EndGame(bool win, int score, string enemy_type)
         {
             _player_wins = win;
             _score = score;
+            _enemy_type = enemy_type;
             _hs = HighScore.Instance;
         }
 

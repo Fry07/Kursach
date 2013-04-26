@@ -174,7 +174,7 @@ namespace Kursach1
             }
             if (_player._hp <= 0)
             {
-                EndGame end = new EndGame(false, _score);
+                EndGame end = new EndGame(false, _score, _enemy_type);
                 end.Init();
                 
             }
@@ -188,7 +188,7 @@ namespace Kursach1
                 {
                     _score += 20;
                 }
-                    EndGame end = new EndGame(true, _score);
+                    EndGame end = new EndGame(true, _score, _enemy_type);
                 end.Init();
             }
             else
